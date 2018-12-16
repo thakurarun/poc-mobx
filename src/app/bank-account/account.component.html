@@ -1,0 +1,54 @@
+<div>
+  <h3>My Bank Balance Application</h3>
+
+  <p></p>
+
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input
+        name="amount-input"
+        type="number"
+        matInput
+        placeholder="enter amount"
+        [(ngModel)]="amount"
+      />
+    </mat-form-field>
+    <mat-divider></mat-divider>
+    <mat-list>
+      <mat-list-item *ngFor="let item of validationMessages">
+        {{ item }}
+      </mat-list-item>
+    </mat-list>
+  </form>
+
+  <h3><label>Available Balance:</label> {{ balance }}</h3>
+
+  <div class="button-group">
+    <button mat-raised-button (click)="deposit()" [disabled]="amount < 1">
+      Deposit
+    </button>
+
+    <button mat-raised-button (click)="withdraw()" [disabled]="amount < 1">
+      Withdraw
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+  <div>
+    <mat-label>
+      <h3>
+        <span matBadge="{{transactions.length}}" matBadgeOverlap="false">
+          Transactions
+        </span>
+      </h3></mat-label
+    >
+    <mat-list>
+      <mat-list-item *ngFor="let item of transactions">
+        <p>
+          {{ item }}
+          <mat-divider></mat-divider>
+        </p>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
