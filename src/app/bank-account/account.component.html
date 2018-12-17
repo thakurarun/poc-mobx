@@ -5,13 +5,7 @@
 
   <form class="example-form">
     <mat-form-field class="example-full-width">
-      <input
-        name="amount-input"
-        type="number"
-        matInput
-        placeholder="enter amount"
-        [(ngModel)]="amount"
-      />
+        <input matInput placeholder="enter amount" type="number" [formControl]="amount">
     </mat-form-field>
     <mat-divider></mat-divider>
     <mat-list>
@@ -24,11 +18,11 @@
   <h3><label>Available Balance:</label> {{ balance }}</h3>
 
   <div class="button-group">
-    <button mat-raised-button (click)="deposit()" [disabled]="amount < 1">
+    <button mat-raised-button (click)="deposit()" [disabled]="validAmount">
       Deposit
     </button>
 
-    <button mat-raised-button (click)="withdraw()" [disabled]="amount < 1">
+    <button mat-raised-button (click)="withdraw()" [disabled]="validAmount">
       Withdraw
     </button>
   </div>

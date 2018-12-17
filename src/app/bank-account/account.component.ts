@@ -1,29 +1,44 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import * as _ from "lodash";
+import { observable, computed } from "mobx";
+import { FormControl } from "@angular/forms";
+
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
-  styleUrls: ["./account.component.css"]
+  styleUrls: ["./account.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent implements OnInit {
-  amount: number = 0;
+  amount = new FormControl();
+
+  @observable
   transactions: number[] = [];
+
   validationMessages: string[] = [];
 
-  public get balance(): number {
+  @computed
+  get balance(): number {
     console.log("balance check");
     return _.sum(this.transactions);
   }
 
-  public deposit(): void {
+  @computed
+  get validAmount(): boolean {
+    return this.amount.value < 1;
+  }
+
+  deposit(): void {
     console.log("deposited");
-    this.transactions = [...this.transactions, this.amount];
+    let value = this.amount.value;
+    this.transactions = [...this.transactions, value];
     this.resetAmount();
   }
 
-  public withdraw(): void {
+  withdraw(): void {
     console.log("withdrawn called");
-    if (this.balance - this.amount < 0) {
+    let value = this.amount.value;
+    if (this.balance - value < 0) {
       this.clearValidations();
       this.validationMessages = [
         ...this.validationMessages,
@@ -31,7 +46,7 @@ export class AccountComponent implements OnInit {
       ];
       return;
     }
-    this.transactions = [...this.transactions, -this.amount];
+    this.transactions = [...this.transactions, -value];
     this.resetAmount();
   }
 
@@ -40,7 +55,7 @@ export class AccountComponent implements OnInit {
   }
 
   resetAmount() {
-    this.amount = 0;
+    this.amount.setValue(0);
     this.clearValidations();
   }
 
