@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import * as _ from "lodash";
 import { observable, computed } from "mobx";
 import { FormControl } from "@angular/forms";
-
+import { debounce, tap } from "rxjs/operators";
+import { Observable } from "rxjs";
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
@@ -11,6 +12,7 @@ import { FormControl } from "@angular/forms";
 })
 export class AccountComponent implements OnInit {
   amount = new FormControl();
+  amount$: Observable<number>;
 
   @observable
   transactions: number[] = [];
@@ -59,6 +61,13 @@ export class AccountComponent implements OnInit {
     this.clearValidations();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.amount$ = this.amount.valueChanges.pipe(
+      tap(() => {
+        debugger;
+        this.validAmount;
+      })
+    );
+  }
   constructor() {}
 }
