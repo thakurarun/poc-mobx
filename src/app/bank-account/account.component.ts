@@ -1,42 +1,40 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy
+} from "@angular/core";
 import * as _ from "lodash";
-import { observable, computed } from "mobx";
+import { observable, computed, action } from "mobx";
 import { FormControl } from "@angular/forms";
-import { debounce, tap } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { AccountState } from "./account.state";
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
   styleUrls: ["./account.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [AccountState]
 })
 export class AccountComponent implements OnInit {
   amount = new FormControl();
-  amount$: Observable<number>;
-
-  @observable
-  transactions: number[] = [];
 
   validationMessages: string[] = [];
 
   @computed
   get balance(): number {
-    console.log("balance check");
-    return _.sum(this.transactions);
+    console.log("balance check/update");
+    return _.sum(this.state.transactions);
   }
 
-  @computed
-  get validAmount(): boolean {
-    return this.amount.value < 1;
-  }
-
+  @action
   deposit(): void {
     console.log("deposited");
     let value = this.amount.value;
-    this.transactions = [...this.transactions, value];
+    this.state.transactions = [...this.state.transactions, value];
     this.resetAmount();
   }
 
+  @action
   withdraw(): void {
     console.log("withdrawn called");
     let value = this.amount.value;
@@ -48,7 +46,7 @@ export class AccountComponent implements OnInit {
       ];
       return;
     }
-    this.transactions = [...this.transactions, -value];
+    this.state.transactions = [...this.state.transactions, -value];
     this.resetAmount();
   }
 
@@ -62,12 +60,18 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.amount$ = this.amount.valueChanges.pipe(
-      tap(() => {
-        debugger;
-        this.validAmount;
-      })
-    );
+    // if (localStorage.accountState) {
+    //   this.state = JSON.parse(localStorage.accountState) as AccountState;
+    // }
+    this.amount.valueChanges.subscribe(value => {
+      this.state.validAmount = value > 0;
+    });
   }
-  constructor() {}
+
+  constructor(protected state: AccountState) {
+    window.onbeforeunload = () => {
+      localStorage.accountState = JSON.stringify(this.state);
+    };
+    // localStorage.clear();
+  }
 }

@@ -1,3 +1,8 @@
+import { Injectable } from "@angular/core";
+import { observable } from "mobx-angular";
+
+@Injectable()
 export class AccountState {
-  amount: number = 0;
+  @observable validAmount: boolean = false;
+  @observable transactions: number[] = [];
 }
