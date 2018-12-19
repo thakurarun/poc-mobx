@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import { observable, computed, action } from "mobx";
 import { FormControl } from "@angular/forms";
 import { AccountState } from "./account.state";
+"use strict";
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
@@ -26,17 +27,15 @@ export class AccountComponent implements OnInit {
     return _.sum(this.state.transactions);
   }
 
-  @action
+  @action("deposited")
   deposit(): void {
-    console.log("deposited");
     let value = this.amount.value;
     this.state.transactions = [...this.state.transactions, value];
     this.resetAmount();
   }
 
-  @action
+  @action("withdrawn")
   withdraw(): void {
-    console.log("withdrawn called");
     let value = this.amount.value;
     if (this.balance - value < 0) {
       this.clearValidations();
@@ -55,23 +54,23 @@ export class AccountComponent implements OnInit {
   }
 
   resetAmount() {
-    this.amount.setValue(0);
+    this.amount.setValue("");
     this.clearValidations();
   }
 
   ngOnInit() {
+    //// enable to save state to local system
     // if (localStorage.accountState) {
-    //   this.state = JSON.parse(localStorage.accountState) as AccountState;
+    //   this.state = observable.object(JSON.parse(localStorage.accountState));
+    //   localStorage.removeItem("accountState");
     // }
+    // window.onbeforeunload = () => {
+    //   localStorage.accountState = JSON.stringify(this.state);
+    // };
     this.amount.valueChanges.subscribe(value => {
       this.state.validAmount = value > 0;
     });
   }
 
-  constructor(protected state: AccountState) {
-    window.onbeforeunload = () => {
-      localStorage.accountState = JSON.stringify(this.state);
-    };
-    // localStorage.clear();
-  }
+  constructor(public state: AccountState) {}
 }
