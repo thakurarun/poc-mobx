@@ -1,61 +1,36 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy
-} from "@angular/core";
-import * as _ from "lodash";
-import { observable, computed, action } from "mobx";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+
+import { computed, action, reaction, when } from "mobx";
 import { FormControl } from "@angular/forms";
-import { AccountState } from "./account.state";
-"use strict";
+import { AccountState as AccountStore } from "./account.state";
+import { tap } from "rxjs/operators";
+
 @Component({
   selector: "app-account",
   templateUrl: "./account.component.html",
   styleUrls: ["./account.component.css"],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [AccountState]
+  providers: [AccountStore]
 })
 export class AccountComponent implements OnInit {
   amount = new FormControl();
 
-  validationMessages: string[] = [];
-
-  @computed
-  get balance(): number {
-    console.log("balance check/update");
-    return _.sum(this.state.transactions);
+  deposit() {
+    this.store
+      .deposit(this.amount.value)
+      .pipe(tap(result => result && this.resetAmount()))
+      .subscribe();
   }
 
-  @action("deposited")
-  deposit(): void {
-    let value = this.amount.value;
-    this.state.transactions = [...this.state.transactions, value];
-    this.resetAmount();
-  }
-
-  @action("withdrawn")
-  withdraw(): void {
-    let value = this.amount.value;
-    if (this.balance - value < 0) {
-      this.clearValidations();
-      this.validationMessages = [
-        ...this.validationMessages,
-        "not suffient balance"
-      ];
-      return;
-    }
-    this.state.transactions = [...this.state.transactions, -value];
-    this.resetAmount();
-  }
-
-  private clearValidations() {
-    this.validationMessages.length = 0;
+  withdraw() {
+    this.store
+      .withdraw(this.amount.value)
+      .pipe(tap(result => result && this.resetAmount()))
+      .subscribe();
   }
 
   resetAmount() {
     this.amount.setValue("");
-    this.clearValidations();
   }
 
   ngOnInit() {
@@ -68,9 +43,9 @@ export class AccountComponent implements OnInit {
     //   localStorage.accountState = JSON.stringify(this.state);
     // };
     this.amount.valueChanges.subscribe(value => {
-      this.state.validAmount = value > 0;
+      this.store.validAmount = value > 0;
     });
   }
 
-  constructor(public state: AccountState) {}
+  constructor(public store: AccountStore) {}
 }

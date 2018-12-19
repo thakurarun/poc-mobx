@@ -9,20 +9,20 @@
     </mat-form-field>
     <mat-divider></mat-divider>
     <mat-list>
-      <mat-list-item *ngFor="let item of validationMessages">
+      <mat-list-item *ngFor="let item of store.validationMessages">
         {{ item }}
       </mat-list-item>
     </mat-list>
   </form>
 
-  <h3><label>Available Balance:</label> {{ balance }}</h3>
+  <h3><label>Available Balance:</label> {{ store.balance }} </h3>
 
   <div class="button-group">
-    <button mat-raised-button (click)="deposit()" [disabled]="!state.validAmount">
+    <button mat-raised-button (click)="deposit()" [disabled]="!store.validAmount">
       Deposit
     </button>
 
-    <button mat-raised-button (click)="withdraw()" [disabled]="!state.validAmount">
+    <button mat-raised-button (click)="withdraw()" [disabled]="!store.validAmount">
       Withdraw
     </button>
   </div>
@@ -31,13 +31,13 @@
   <div>
     <mat-label>
       <h3>
-        <span matBadge="{{state.transactions.length}}" matBadgeOverlap="false">
+        <span matBadge="{{store.transactions.length}}" matBadgeOverlap="false">
           Transactions
         </span>
       </h3></mat-label
     >
     <mat-list>
-      <mat-list-item *ngFor="let item of state.transactions">
+      <mat-list-item *ngFor="let item of store.transactions">
         <p>
           {{ item }}
           <mat-divider></mat-divider>
