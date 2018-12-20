@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { when, reaction } from "mobx";
 import { observable, computed, action } from "mobx-angular";
 import * as _ from "lodash";
 import { Observable, of } from "rxjs";
@@ -17,7 +18,6 @@ export class AccountState {
   @action("deposited")
   deposit(amount: number): Observable<boolean> {
     this.transactions = [...this.transactions, amount];
-    this.clearValidationsIfAny();
     return of(true);
   }
 
@@ -33,6 +33,16 @@ export class AccountState {
     }
     this.transactions = [...this.transactions, -amount];
     return of(true);
+  }
+
+  constructor() {
+    reaction(
+      () => this.transactions,
+      () => {
+        this.clearValidationsIfAny();
+      },
+      { name: "clear validations if anything added to transaction" }
+    );
   }
 
   private clearValidationsIfAny() {
