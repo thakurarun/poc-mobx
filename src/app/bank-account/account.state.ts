@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { when, reaction } from "mobx";
+import { when, reaction, IReactionDisposer } from "mobx";
 import { observable, computed, action } from "mobx-angular";
 import * as _ from "lodash";
 import { Observable, of } from "rxjs";
@@ -36,13 +36,7 @@ export class AccountState {
   }
 
   constructor() {
-    reaction(
-      () => this.transactions,
-      () => {
-        this.clearValidationsIfAny();
-      },
-      { name: "clear validations if anything added to transaction" }
-    );
+    this.setupReactions();
   }
 
   private clearValidationsIfAny() {
@@ -50,5 +44,22 @@ export class AccountState {
       console.log("clear validation");
       this.validationMessages.length = 0;
     }
+  }
+
+  private reactions: IReactionDisposer[] = [];
+  private setupReactions() {
+    let clearValidationReaction = reaction(
+      () => this.transactions,
+      () => {
+        this.clearValidationsIfAny();
+      },
+      { name: "clear validations if anything added to transaction" }
+    );
+    this.reactions.push(clearValidationReaction);
+  }
+
+  clearReactions() {
+    console.log("clear reactions");
+    this.reactions.forEach(reaction => reaction());
   }
 }

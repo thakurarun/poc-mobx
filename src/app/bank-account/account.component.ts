@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy
+} from "@angular/core";
 
 import { computed, action, reaction, when } from "mobx";
 import { FormControl } from "@angular/forms";
@@ -12,7 +17,7 @@ import { tap } from "rxjs/operators";
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AccountStore]
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
   amount = new FormControl();
 
   deposit() {
@@ -45,6 +50,10 @@ export class AccountComponent implements OnInit {
     this.amount.valueChanges.subscribe(value => {
       this.store.validAmount = value > 0;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.store.clearReactions();
   }
 
   constructor(public store: AccountStore) {}
