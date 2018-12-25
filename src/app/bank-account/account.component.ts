@@ -5,9 +5,8 @@ import {
   OnDestroy
 } from "@angular/core";
 
-import { computed, action, reaction, when } from "mobx";
 import { FormControl } from "@angular/forms";
-import { AccountState as AccountStore } from "./account.state";
+import { AccountStore } from "./account.store";
 import { tap } from "rxjs/operators";
 
 @Component({
@@ -39,14 +38,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    //// enable to save state to local system
-    // if (localStorage.accountState) {
-    //   this.state = observable.object(JSON.parse(localStorage.accountState));
-    //   localStorage.removeItem("accountState");
-    // }
-    // window.onbeforeunload = () => {
-    //   localStorage.accountState = JSON.stringify(this.state);
-    // };
     this.amount.valueChanges.subscribe(value => {
       this.store.validAmount = value > 0;
     });

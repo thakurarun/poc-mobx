@@ -1,34 +1,13 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { AccountComponent } from "./account.component";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {
-  MatButtonModule,
-  MatListModule,
-  MatInputModule,
-  MatBadgeModule
-} from "@angular/material";
-import { MobxAngularModule } from "mobx-angular";
+import { AppModule } from "../app.module";
 describe("AccountComponent", () => {
   let component: AccountComponent;
   let fixture: ComponentFixture<AccountComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountComponent],
-      imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatListModule,
-        MatInputModule,
-        MatBadgeModule,
-        BrowserAnimationsModule,
-        MobxAngularModule
-      ]
+      imports: [AppModule]
     }).compileComponents();
   }));
 

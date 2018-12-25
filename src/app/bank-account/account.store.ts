@@ -4,14 +4,14 @@ import { observable, computed, action } from "mobx-angular";
 import * as _ from "lodash";
 import { Observable, of } from "rxjs";
 @Injectable()
-export class AccountState {
+export class AccountStore {
   @observable validAmount: boolean = false;
   @observable transactions: number[] = [];
   @observable validationMessages: string[] = [];
 
   @computed
   get balance(): number {
-    console.log("balance check/update");
+    console.log("balance check");
     return _.sum(this.transactions);
   }
 
@@ -51,6 +51,7 @@ export class AccountState {
     let clearValidationReaction = reaction(
       () => this.transactions,
       () => {
+        console.log("changes to transactions");
         this.clearValidationsIfAny();
       },
       { name: "clear validations if anything added to transaction" }
