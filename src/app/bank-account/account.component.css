@@ -10,3 +10,7 @@
   justify-content: space-around;
   margin-bottom: 5px;
 }
+
+:host .error-message{
+  color: rgb(255, 44, 44);
+}

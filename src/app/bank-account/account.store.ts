@@ -41,7 +41,6 @@ export class AccountStore {
 
   private clearValidationsIfAny() {
     if (this.validationMessages.length) {
-      console.log("clear validation");
       this.validationMessages.length = 0;
     }
   }

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { AccountComponent } from "./account.component";
 import { AppModule } from "../app.module";
+import { By } from "@angular/platform-browser";
 describe("AccountComponent", () => {
   let component: AccountComponent;
   let fixture: ComponentFixture<AccountComponent>;
@@ -53,5 +54,11 @@ describe("AccountComponent", () => {
     component.amount.setValue(5);
     component.resetAmount();
     expect(component.amount.value).toBe("");
+  });
+
+  it("should disable action buttons", () => {
+    component.amount.setValue(5);
+    let btn = fixture.debugElement.query(By.css("#deposit-btn")).nativeElement;
+    expect(btn.disabled).toBe(false);
   });
 });

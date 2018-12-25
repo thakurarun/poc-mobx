@@ -10,7 +10,7 @@
     <mat-divider></mat-divider>
     <mat-list>
       <mat-list-item *ngFor="let item of store.validationMessages">
-        {{ item }}
+        <span class="error-message"> {{ item }}</span>
       </mat-list-item>
     </mat-list>
   </form>
@@ -18,11 +18,11 @@
   <h3><label>Available Balance:</label> {{ store.balance }} </h3>
 
   <div class="button-group">
-    <button mat-raised-button (click)="deposit()" [disabled]="!store.validAmount">
+    <button id="deposit-btn" mat-raised-button (click)="deposit()" [disabled]="!store.validAmount">
       Deposit
     </button>
 
-    <button mat-raised-button (click)="withdraw()" [disabled]="!store.validAmount">
+    <button id="withdraw-btn" mat-raised-button (click)="withdraw()" [disabled]="!store.validAmount">
       Withdraw
     </button>
   </div>
