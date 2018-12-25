@@ -1,16 +1,35 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AccountComponent } from './account.component';
-
-describe('AccountComponent', () => {
+import { AccountComponent } from "./account.component";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatButtonModule,
+  MatListModule,
+  MatInputModule,
+  MatBadgeModule
+} from "@angular/material";
+import { MobxAngularModule } from "mobx-angular";
+describe("AccountComponent", () => {
   let component: AccountComponent;
   let fixture: ComponentFixture<AccountComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountComponent ]
-    })
-    .compileComponents();
+      declarations: [AccountComponent],
+      imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatListModule,
+        MatInputModule,
+        MatBadgeModule,
+        BrowserAnimationsModule,
+        MobxAngularModule
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +38,41 @@ describe('AccountComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create account application", () => {
     expect(component).toBeTruthy();
+  });
+
+  it("should deposit money", () => {
+    component.amount.setValue(10);
+    component.deposit();
+    expect(component.store.balance).toBe(10);
+  });
+
+  it("should withdraw money", () => {
+    component.amount.setValue(10);
+    component.deposit();
+    component.amount.setValue(6);
+    component.withdraw();
+    expect(component.store.balance).toBe(4);
+  });
+
+  it("should throw exception for not sufficient balance", () => {
+    component.amount.setValue(10);
+    component.deposit();
+    component.amount.setValue(15);
+    component.withdraw();
+    expect(component.store.validationMessages.length).toBe(1);
+  });
+
+  it("should clear amount after deposit", () => {
+    component.amount.setValue(5);
+    component.deposit();
+    expect(component.amount.value).toBe("");
+  });
+
+  it("should reset amount", () => {
+    component.amount.setValue(5);
+    component.resetAmount();
+    expect(component.amount.value).toBe("");
   });
 });

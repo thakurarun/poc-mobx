@@ -1,31 +1,37 @@
-import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-
-describe('AppComponent', () => {
+import { TestBed, async } from "@angular/core/testing";
+import { AppComponent } from "./app.component";
+import { AccountComponent } from "./bank-account/account.component";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatButtonModule,
+  MatListModule,
+  MatInputModule,
+  MatBadgeModule
+} from "@angular/material";
+import { MobxAngularModule } from "mobx-angular";
+describe("AppComponent", () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent, AccountComponent],
+      imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatListModule,
+        MatInputModule,
+        MatBadgeModule,
+        BrowserAnimationsModule,
+        MobxAngularModule
+      ]
     }).compileComponents();
   }));
 
-  it('should create the app', () => {
+  it("should create the app", () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'mobx-ng'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('mobx-ng');
-  });
-
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to mobx-ng!');
   });
 });
