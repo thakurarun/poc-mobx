@@ -1,17 +1,34 @@
 import { Injectable } from "@angular/core";
-import { when, reaction, IReactionDisposer } from "mobx";
-import { observable, computed, action } from "mobx-angular";
+import {
+  reaction,
+  IReactionDisposer,
+  autorun,
+  observable,
+  computed,
+  action
+} from "mobx";
 import * as _ from "lodash";
 import { Observable, of } from "rxjs";
+import { startReacting } from "../autorun.utility";
 @Injectable()
 export class AccountStore {
   @observable validAmount: boolean = false;
   @observable transactions: number[] = [];
   @observable validationMessages: string[] = [];
 
+  constructor() {
+    this.setupReactions();
+    // if (localStorage.transactions) {
+    //   this.transactions = JSON.parse(localStorage.transactions);
+    // }
+    // autorun(() => {
+    //   localStorage.setItem("transactions", JSON.stringify(this.transactions));
+    // });
+  }
+
   @computed
   get balance(): number {
-    console.log("balance check");
+    console.count("balance()");
     return _.sum(this.transactions);
   }
 
@@ -35,10 +52,6 @@ export class AccountStore {
     return of(true);
   }
 
-  constructor() {
-    this.setupReactions();
-  }
-
   private clearValidationsIfAny() {
     if (this.validationMessages.length) {
       this.validationMessages.length = 0;
@@ -47,19 +60,15 @@ export class AccountStore {
 
   private reactions: IReactionDisposer[] = [];
   private setupReactions() {
-    let clearValidationReaction = reaction(
+    startReacting(
+      this,
       () => this.transactions,
-      () => {
-        console.log("changes to transactions");
-        this.clearValidationsIfAny();
-      },
+      () => this.clearValidationsIfAny(),
       { name: "clear validations if anything added to transaction" }
     );
-    this.reactions.push(clearValidationReaction);
   }
 
   clearReactions() {
-    console.log("clear reactions");
     this.reactions.forEach(reaction => reaction());
   }
 }

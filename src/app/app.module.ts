@@ -9,7 +9,6 @@ import {
 } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MobxAngularModule } from "mobx-angular";
 import { AppComponent } from "./app.component";
 import { AccountComponent } from "./bank-account/account.component";
 
@@ -23,8 +22,7 @@ import { AccountComponent } from "./bank-account/account.component";
     MatListModule,
     MatInputModule,
     MatBadgeModule,
-    BrowserAnimationsModule,
-    MobxAngularModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
